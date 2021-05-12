@@ -13,8 +13,6 @@
   background-color: #f4f4f4;
 }
 
-#pong-canvas {
-  width: 120px;
-  height: 8px;
-  /* border: 1px dashed red; */
+#skorsten-canvas {
+  outline: 1px dashed red;
 }

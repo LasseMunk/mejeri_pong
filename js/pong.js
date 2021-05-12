@@ -1,14 +1,21 @@
 // https://codepen.io/thecodingpie/pen/NWxzBxJ
 
-const pongCanvas = document.getElementById('pong-canvas');
-const pCtx = pongCanvas.getContext('2d');
+const skorstenCanvas = document.getElementById('skorsten-canvas');
+const pCtx = skorstenCanvas.getContext('2d');
+
+skorstenCanvas.width = 180;
+skorstenCanvas.height = 8;
+
+const pongCanvas = {
+  height: 8,
+  width: 72,
+  wOffsetL: 54, // pong playing field padding L
+                // 180 - 72 = 108. 108 / 2 = 54
+  wOffsetR: 54
+}
 
 
 
-pongCanvas.height = 8;
-pongCanvas.width = 180;
-const widthOffsetL = 36; // pong playing field padding L
-const widtthOffsetR = 36; // pong playing field padding R
 
 
 const netWidth = 1;
@@ -22,7 +29,7 @@ let upPressed = false;
 let downPressed = false;
 
 const net = {
-  x: (pongCanvas.width / 2) - (netWidth / 2),
+  x: ((pongCanvas.width / 2) - (netWidth / 2)) + pongCanvas.wOffsetL,
   y: 0,
   width: netWidth,
   height: netHeight,
@@ -31,7 +38,7 @@ const net = {
 
 // user paddle
 const user = {
-  x: paddleCanvasPadding,
+  x: paddleCanvasPadding + pongCanvas.wOffsetL,
   // initial set in the middle
   y: (pongCanvas.height / 2) - (paddleHeight / 2),
   width: paddleWidth,
@@ -41,7 +48,7 @@ const user = {
 };
 
 const ai = {
-  x: pongCanvas.width - (paddleWidth + paddleCanvasPadding),
+  x: (pongCanvas.width - (paddleWidth + paddleCanvasPadding)) + pongCanvas.wOffsetL,
   y: (pongCanvas.height / 2) - (paddleHeight / 2),
   width: paddleWidth,
   height: paddleHeight,
@@ -51,7 +58,7 @@ const ai = {
 };
 
 const ball = {
-  x: pongCanvas.width / 2,
+  x: (pongCanvas.width / 2) + pongCanvas.wOffsetL,
   y: pongCanvas.height / 2,
   radius: 1,
   speed: 1,
@@ -74,7 +81,7 @@ function drawScore(x, y, score) {
   pCtx.font = '6px sans-serif';
 
   // syntax -> fillText(text, x, y)
-  pCtx.fillText(score, x, y);
+  pCtx.fillText(score, x + pongCanvas.wOffsetL, y);
 };
 
 function drawPaddle(x, y, width, height, color) {
