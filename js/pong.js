@@ -1,10 +1,15 @@
 // https://codepen.io/thecodingpie/pen/NWxzBxJ
 
 const pongCanvas = document.getElementById('pong-canvas');
-pongCanvas.width = 120;
-pongCanvas.height = 8;
-
 const pCtx = pongCanvas.getContext('2d');
+
+
+
+pongCanvas.height = 8;
+pongCanvas.width = 180;
+const widthOffsetL = 36; // pong playing field padding L
+const widtthOffsetR = 36; // pong playing field padding R
+
 
 const netWidth = 1;
 const netHeight = pongCanvas.height;
@@ -41,7 +46,8 @@ const ai = {
   width: paddleWidth,
   height: paddleHeight,
   color: '#FFF',
-  score: 0
+  score: 0,
+  difficulty: 0.01 // lower number makes it easier, closer to 1 makes it impossible
 };
 
 const ball = {
@@ -85,7 +91,7 @@ function drawBall(x, y, radius, color) {
   pCtx.fill();
 }
 
-function collisionDetech(player, ball) {
+function collisionDetect(player, ball) {
   // returns true or false if either user or ai paddle
   // depending on player input to function
   player.top = player.y;
@@ -141,11 +147,13 @@ function update() {
   ball.x += ball.velocityX;
   ball.y += ball.velocityY;
   //  ai paddle movement
+  ai.y += ((ball.y - (ai.y + ai.height / 2))) * ai.difficulty;
+
   // collision dectection on paddles
     // if the ball x.pos is on user half then user else ai
   let player = (ball.x < pongCanvas.width / 2) ? user : ai;
 
-  if(collisionDetech(player, ball)) {
+  if(collisionDetect(player, ball)) {
     // play hit sound
 
     // default angle is 0 deg in Radio
@@ -194,6 +202,15 @@ function gameLoop() {
   window.requestAnimationFrame(gameLoop);
 }
 
+const init = function(){
+  window.addEventListener('keydown', keyDownHandler);
+  window.addEventListener('keyup', keyUpHandler);
+
+  requestAnimationFrame(gameLoop);
+}();
+
+// Control
+
 function keyUpHandler(e) {
   // get keyCode
   switch (e.key) {
@@ -218,9 +235,3 @@ function keyDownHandler(e) {
   }
 }
 
-const init = function(){
-  window.addEventListener('keydown', keyDownHandler);
-  window.addEventListener('keyup', keyUpHandler);
-
-  requestAnimationFrame(gameLoop);
-}();
