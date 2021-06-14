@@ -1,219 +1,271 @@
 // https://codepen.io/thecodingpie/pen/NWxzBxJ
 
-const skorstenCanvas = document.getElementById('skorsten-canvas');
-const pCtx = skorstenCanvas.getContext('2d');
+class Pong {
+  constructor(canvasID) {
+    this.pongCanvas = document.getElementById(canvasID);
+    this.pongCanvas.width = 180;
+    this.pongCanvas.height = 8;
 
-skorstenCanvas.width = 180;
-skorstenCanvas.height = 8;
+    this.ctx = this.pongCanvas.getContext('2d');
 
-const pongCanvas = {
-  height: 8,
-  width: 72,
-  wOffsetL: 54, // pong playing field padding L
-                // 180 - 72 = 108. 108 / 2 = 54
-  wOffsetR: 54
-}
+    this.canvasSetup = {
+      height: 8,
+      width: 72,
+      wOffsetL: 0, // pong playing field padding L
+                    // 180 - 72 = 108. 108 / 2 = 54
+    };
 
+    this.paddleSetup = {
+      width: 2,
+      height: 3,
+      padding: 1
+    };
 
+    this.userLeft = this.createUser(
+      this.paddleSetup.padding + this.canvasSetup.wOffsetL, // x position
+      '#FFF', // color
+      0.03,   // difficulty
+      true   // is AI
+    );
 
+    this.userRight = this.createUser(
+      (this.pongCanvas.width - (this.paddleSetup.width + this.paddleSetup.padding)) + this.canvasSetup.wOffsetL, // x position
+      '#FFF', // color
+      0.03,   // difficulty
+      true    // is AI
+    );
 
+    this.net = this.createNet(
+      1,      // width
+      '#FFF'  // color
+    );
+      
+    this.ball = this.createBall(
+        1,          // radius
+        0.3,        // speed
+        0.3,        // initial_speed
+        0.2,        // increase_speed
+        0.3,        // velocityX
+        0.32,       // velocityY
+        '#ff33cc'   // color 
+    );
 
-const netWidth = 1;
-const netHeight = pongCanvas.height;
+    // constructor end
+  }
 
-const paddleWidth = 2;
-const paddleHeight = 3;
-const paddleCanvasPadding = 1;
+  createNet(width, color){
+    
+    return {
+      x: ((this.pongCanvas.width / 2) - (width / 2)) + this.canvasSetup.wOffsetL,
+      y: 0,
+      width: width,
+      height: this.canvasSetup.height,
+      color: color,
+    };
+  }
 
-let upPressed = false;
-let downPressed = false;
+  createUser(posX, color, difficulty, isAI){
+    return {
+        x: posX,
+        // initial set in the middle
+        y: (this.pongCanvas.height / 2) - (this.paddleSetup.height / 2),
+        width: this.paddleSetup.width,
+        height: this.paddleSetup.height,
+        color: color,
+        score: 0,
+        difficulty: difficulty, // lower number makes it easier, closer to 1 makes it impossible
+        socketID: '#hash-placeholder',
+        socketName: 'name-placeholder',
+        upPressed: false,
+        downPressed: false,
+        isAI: isAI
+    }
+  }
 
-const net = {
-  x: ((pongCanvas.width / 2) - (netWidth / 2)) + pongCanvas.wOffsetL,
-  y: 0,
-  width: netWidth,
-  height: netHeight,
-  color: '#FFF',
-};
+  createBall(radius, speed, init_speed, inc_speed, velX, velY, color) {
+    return {
+      x: (this.pongCanvas.width / 2),
+      y: this.pongCanvas.height / 2,
+      radius: radius,
+      speed: speed,
+      initial_speed: init_speed,
+      increase_speed: inc_speed,
+      velocityX: velX,
+      velocityY: velY,
+      color: color
+    };
+  }
 
-// user paddle
-const user = {
-  x: paddleCanvasPadding + pongCanvas.wOffsetL,
-  // initial set in the middle
-  y: (pongCanvas.height / 2) - (paddleHeight / 2),
-  width: paddleWidth,
-  height: paddleHeight,
-  color: '#FFF',
-  score: 0
-};
+  drawNet() {
+    // Color of net
+    this.ctx.fillStyle = this.net.color;
+    // syntax --> fillRect(x, y, width, height)
+    this.ctx.fillRect(this.net.x, this.net.y, this.net.width, this.net.height);
+  };
 
-const ai = {
-  x: (pongCanvas.width - (paddleWidth + paddleCanvasPadding)) + pongCanvas.wOffsetL,
-  y: (pongCanvas.height / 2) - (paddleHeight / 2),
-  width: paddleWidth,
-  height: paddleHeight,
-  color: '#FFF',
-  score: 0,
-  difficulty: 0.01 // lower number makes it easier, closer to 1 makes it impossible
-};
-
-const ball = {
-  x: (pongCanvas.width / 2) + pongCanvas.wOffsetL,
-  y: pongCanvas.height / 2,
-  radius: 1,
-  speed: 1,
-  initial_speed: 1,
-  increase_speed: 0.2,
-  velocityX: 1,
-  velocityY: 1,
-  color: '#ff33cc'
-};
-
-function drawNet() {
-  // Color of net
-  pCtx.fillStyle = net.color;
-  // syntax --> fillRect(x, y, width, height)
-  pCtx.fillRect(net.x, net.y, net.width, net.height);
-};
-
-function drawScore(x, y, score) {
-  pCtx.fillStyle = '#FFF';
-  pCtx.font = '6px sans-serif';
-
-  // syntax -> fillText(text, x, y)
-  pCtx.fillText(score, x + pongCanvas.wOffsetL, y);
-};
-
-function drawPaddle(x, y, width, height, color) {
-  pCtx.fillStyle = color;
-  pCtx.fillRect(x, y, width, height);
-};
-
-function drawBall(x, y, radius, color) {
-  pCtx.fillStyle = color;
-  pCtx.beginPath();
-  // syntax --> arc(x, y, radius, startAngle, endAngle, antiClockwise_or_not)
-  pCtx.arc(x, y, radius, 0, Math.PI * 2, true); // π * 2 Radians = 360 degrees
-  pCtx.closePath();
-  pCtx.fill();
-}
-
-function collisionDetect(player, ball) {
-  // returns true or false if either user or ai paddle
-  // depending on player input to function
-  player.top = player.y;
-  player.right = player.x + player.width;
-  player.bottom = player.y + player.height;
-  player.left = player.x;
-
-  ball.top = ball.y - ball.radius;
-  ball.right = ball.x + ball.radius;
-  ball.bottom = ball.y + ball.radius;
-  ball.left = ball.x - ball.radius;
-
+  drawScore(x, y, score) {
+    this.ctx.fillStyle = '#FFF';
+    this.ctx.font = '6px sans-serif';
   
-  return ball.left < player.right && ball.top < player.bottom && ball.right > player.left && ball.bottom > player.top;
+    // syntax -> fillText(text, x, y)
+    this.ctx.fillText(score, x + this.canvasSetup.wOffsetL, y);
+  };
+
+  drawUser(x, y, width, height, color) {
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(x, y, width, height);
+  };
+
+  drawBall(x, y, radius, color) {
+    this.ctx.fillStyle = color;
+    this.ctx.beginPath();
+    // syntax --> arc(x, y, radius, startAngle, endAngle, antiClockwise_or_not)
+    this.ctx.arc(x, y, radius, 0, Math.PI * 2, true); // π * 2 Radians = 360 degrees
+    this.ctx.closePath();
+    this.ctx.fill();
+  }
+
+  collisionDetect(player, ball) {
+    // returns true or false if either user or ai paddle
+    // depending on player input to function
+    player.top = player.y;
+    player.right = player.x + player.width;
+    player.bottom = player.y + player.height;
+    player.left = player.x;
+  
+    ball.top = ball.y - ball.radius;
+    ball.right = ball.x + ball.radius;
+    ball.bottom = ball.y + ball.radius;
+    ball.left = ball.x - ball.radius;
+  
+    
+    return ball.left < player.right && ball.top < player.bottom && ball.right > player.left && ball.bottom > player.top;
+  }
+
+  reset() {
+    // reset ball's value to older values
+    this.ball.x = this.pongCanvas.width / 2;
+    this.ball.y = this.pongCanvas.height / 2;
+    this.ball.speed = this.ball.initial_speed;
+    
+    // changes the diretion of ball
+    this.ball.velocityX = -this.ball.velocityX;
+    this.ball.velocityY = -this.ball.velocityY;
+  }
+
+  update() {
+
+    // move user 1 paddle
+    if (this.userLeft.isAI === false && this.userLeft.upPressed && this.userLeft.y > 0) {
+      this.userLeft.y -= 1;
+    } else if (this.userLeft.isAI === false && this.userLeft.downPressed && (this.userLeft.y < this.pongCanvas.height - this.userLeft.height)) {
+      this.userLeft.y += 1;
+    }
+    // move user 2 paddle
+    if (this.userRight.isAI === false && this.userRight.upPressed && this.userRight.y > 0) {
+      this.userLeft.y -= 1;
+    } else if (this.userRight.isAI === false && this.userRight.downPressed && (this.userRight.y < this.pongCanvas.height - this.userRight.height)) {
+      this.userRight.y += 1;
+    }
+    // check if ball hits top or bottom wall 
+    // move the ball
+    this.ball.x += this.ball.velocityX;
+    this.ball.y += this.ball.velocityY;
+  
+    //  ai paddle movement
+    if(this.userLeft.isAI === true) {
+      this.userLeft.y += ((this.ball.y - (this.userLeft.y + this.userLeft.height / 2))) * this.userLeft.difficulty;
+    }
+    if(this.userRight.isAI === true) {
+      this.userRight.y += ((this.ball.y - (this.userRight.y + this.userRight.height / 2))) * this.userRight.difficulty;
+    }
+  
+    // collision dectection on paddles
+      // if the ball x.pos is on user half then user else ai
+    this.player = (this.ball.x < this.pongCanvas.width / 2) ? this.userLeft : this.userRight;
+  
+    if(this.collisionDetect(this.player, this.ball)) {
+      // play hit sound
+  
+      // default angle is 0 deg in Radians
+      this.angle = 0;
+  
+      if(this.ball.y < (this.player.y + (this.player.height / 2))) {
+        // if ball hit the top of paddle
+        this.angle = -1 * Math.PI / 4; // = -45 deg
+      } else if (this.ball.y > (this.player.y + (this.player.height / 2))) {
+        // if ball hits the bottom of paddle
+        this.angle = Math.PI / 4; // = 45 deg
+      }
+  
+      // Change velocity of ball according to which paddle the ball hit
+      this.ball.velocityX = (this.player === this.userLeft ? 1 : -1) * this.ball.speed * Math.cos(this.angle);
+      this.ball.velocityY = this.ball.speed * Math.sin(this.angle);
+  
+      // increase ball.speed
+      this.ball.speed += this.ball.increase_speed;
+    }
+  
+  
+    if (this.ball.y + this.ball.radius >= this.pongCanvas.height || this.ball.y - this.ball.radius <= 0) {
+      // invert direction if hitting top or bottom
+      this.ball.velocityY = -this.ball.velocityY;
+    }
+  
+    if(this.ball.x + this.ball.radius >= this.pongCanvas.width) {
+      // if ball hits right wall
+      this.userLeft.score += 1;
+      this.reset(); // reset positions if score
+    }
+  
+    if(this.ball.x - this.ball.radius <= 0) {
+      // if ball hits left wall
+      this.userRight.score += 1;
+      this.reset(); // reset positions if score
+    }
+  };
+
+
+  render() {
+    // draw on the canvas
+    this.ctx.fillStyle = '#000';
+    this.ctx.fillRect(0,0, this.canvasSetup.width, this.canvasSetup.height);
+  
+    this.drawNet();
+    // user score
+    // drawScore(pongCanvas.width / 4, pongCanvas.height / 6, this.userLeft.score);
+    // ai score
+    // drawScore( (3 * pongCanvas.width) / 4, pongCanvas.height / 6, this.userRight.score);
+    this.drawUser(this.userLeft.x, this.userLeft.y, this.userLeft.width, this.userLeft.height, this.userLeft.color);
+    this.drawUser(this.userRight.x, this.userRight.y, this.userRight.width, this.userRight.height, this.userRight.color);
+    this.drawBall(this.ball.x + this.canvasSetup.wOffsetL, this.ball.y, this.ball.radius, this.ball.color);
+  };  
 }
 
-function reset() {
-  // reset ball's value to older values
-  ball.x = pongCanvas.width / 2;
-  ball.y = pongCanvas.height / 2;
-  ball.speed = ball.initial_speed;
-  
-  // changes the diretion of ball
-  ball.velocityX = -ball.velocityX;
-  ball.velocityY = -ball.velocityY;
-}
+let animationFrame;
+
+// Create CTX out here
+// pass CTX into pong game
+
+
+const pongGame = new Pong('skorsten-canvas');
+
+
 
 function render() {
-  // draw on the canvas
-  pCtx.fillStyle = '#000';
-  pCtx.fillRect(0,0, pongCanvas.width, pongCanvas.height);
-
-  drawNet();
-  // user score
-  // drawScore(pongCanvas.width / 4, pongCanvas.height / 6, user.score);
-  // ai score
-  // drawScore( (3 * pongCanvas.width) / 4, pongCanvas.height / 6, ai.score);
-  drawPaddle(user.x, user.y, user.width, user.height, user.color);
-  drawPaddle(ai.x, ai.y, ai.width, ai.height, ai.color);
-  drawBall(ball.x, ball.y, ball.radius, ball.color);
-};
-
-function update() {
-
-  // move paddle
-  if (upPressed && user.y > 0) {
-    user.y -= 1;
-  } else if (downPressed && (user.y < pongCanvas.height - user.height)) {
-    user.y += 1;
-  }
-  // check if ball hits top or bottom wall 
-  // move the ball
-  ball.x += ball.velocityX;
-  ball.y += ball.velocityY;
-  //  ai paddle movement
-  ai.y += ((ball.y - (ai.y + ai.height / 2))) * ai.difficulty;
-
-  // collision dectection on paddles
-    // if the ball x.pos is on user half then user else ai
-  let player = (ball.x < pongCanvas.width / 2) ? user : ai;
-
-  if(collisionDetect(player, ball)) {
-    // play hit sound
-
-    // default angle is 0 deg in Radio
-    let angle = 0;
-
-    if(ball.y < (player.y + (player.height / 2))) {
-      // if ball hit the top of paddle
-      angle = -1 * Math.PI / 4; // = -45 deg
-    } else if (ball.y > (player.y + (player.height / 2))) {
-      // if ball hits the bottom of paddle
-      angle = Math.PI / 4; // = 45 deg
-    }
-
-    // Change velocity of ball according to which paddle the ball hit
-    ball.velocityX = (player === user ? 1 : -1) * ball.speed * Math.cos(angle);
-    ball.velocityY = ball.speed * Math.sin(angle);
-
-    // increase ball.speed
-    ball.speed += ball.increase_speed;
-  }
-
-
-  if (ball.y + ball.radius >= pongCanvas.height || ball.y - ball.radius <= 0) {
-    // invert direction if hitting top or bottom
-    ball.velocityY = -ball.velocityY;
-  }
-
-  if(ball.x + ball.radius >= pongCanvas.width) {
-    // if ball hits right wall
-    user.score += 1;
-    reset(); // reset positions if score
-  }
-
-  if(ball.x - ball.radius <= 0) {
-    // if ball hits right wall
-    ai.score += 1;
-    reset(); // reset positions if score
-  }
-};
-
-function gameLoop() {
-  
-  update();
-  render();
-
-  window.requestAnimationFrame(gameLoop);
+  pongGame.update();
+  pongGame.render();
+  animationFrame = window.requestAnimationFrame(render);
 }
+
+
+render();
+
+
 
 const init = function(){
   window.addEventListener('keydown', keyDownHandler);
   window.addEventListener('keyup', keyUpHandler);
-
-  requestAnimationFrame(gameLoop);
 }();
 
 // Control
