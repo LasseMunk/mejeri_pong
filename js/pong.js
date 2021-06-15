@@ -1,17 +1,14 @@
 // https://codepen.io/thecodingpie/pen/NWxzBxJ
 
 class Pong {
-  constructor(canvasID) {
-    this.pongCanvas = document.getElementById(canvasID);
-    this.pongCanvas.width = 180;
-    this.pongCanvas.height = 8;
-
-    this.ctx = this.pongCanvas.getContext('2d');
+  constructor(ctx, canvas) {
+    this.ctx = ctx;
+    this.pongCanvas = canvas;
 
     this.canvasSetup = {
       height: 8,
       width: 72,
-      wOffsetL: 0, // pong playing field padding L
+      wOffsetL: 54, // pong playing field padding L
                     // 180 - 72 = 108. 108 / 2 = 54
     };
 
@@ -29,15 +26,15 @@ class Pong {
     );
 
     this.userRight = this.createUser(
-      (this.pongCanvas.width - (this.paddleSetup.width + this.paddleSetup.padding)) + this.canvasSetup.wOffsetL, // x position
+      (this.pongCanvas.width - (this.paddleSetup.width + this.paddleSetup.padding)) - this.canvasSetup.wOffsetL, // x position
       '#FFF', // color
       0.03,   // difficulty
-      true    // is AI
+      false    // is AI
     );
 
     this.net = this.createNet(
       1,      // width
-      '#FFF'  // color
+      '#00FFFF'  // color
     );
       
     this.ball = this.createBall(
@@ -56,7 +53,7 @@ class Pong {
   createNet(width, color){
     
     return {
-      x: ((this.pongCanvas.width / 2) - (width / 2)) + this.canvasSetup.wOffsetL,
+      x: ((this.pongCanvas.width / 2) - (width / 2)),
       y: 0,
       width: width,
       height: this.canvasSetup.height,
@@ -105,7 +102,7 @@ class Pong {
 
   drawScore(x, y, score) {
     this.ctx.fillStyle = '#FFF';
-    this.ctx.font = '6px sans-serif';
+    this.ctx.font = '2px sans-serif';
   
     // syntax -> fillText(text, x, y)
     this.ctx.fillText(score, x + this.canvasSetup.wOffsetL, y);
@@ -126,7 +123,7 @@ class Pong {
   }
 
   collisionDetect(player, ball) {
-    // returns true or false if either user or ai paddle
+    
     // depending on player input to function
     player.top = player.y;
     player.right = player.x + player.width;
@@ -138,7 +135,7 @@ class Pong {
     ball.bottom = ball.y + ball.radius;
     ball.left = ball.x - ball.radius;
   
-    
+    // returns true or false if either user or ai paddle
     return ball.left < player.right && ball.top < player.bottom && ball.right > player.left && ball.bottom > player.top;
   }
 
@@ -212,25 +209,20 @@ class Pong {
       this.ball.velocityY = -this.ball.velocityY;
     }
   
-    if(this.ball.x + this.ball.radius >= this.pongCanvas.width) {
+    if(this.ball.x + this.ball.radius >= (this.pongCanvas.width - this.canvasSetup.wOffsetL)) {
       // if ball hits right wall
       this.userLeft.score += 1;
       this.reset(); // reset positions if score
     }
   
-    if(this.ball.x - this.ball.radius <= 0) {
+    if(this.ball.x - this.ball.radius <= (0 + this.canvasSetup.wOffsetL)) {
       // if ball hits left wall
       this.userRight.score += 1;
       this.reset(); // reset positions if score
     }
   };
 
-
-  render() {
-    // draw on the canvas
-    this.ctx.fillStyle = '#000';
-    this.ctx.fillRect(0,0, this.canvasSetup.width, this.canvasSetup.height);
-  
+  render() {  
     this.drawNet();
     // user score
     // drawScore(pongCanvas.width / 4, pongCanvas.height / 6, this.userLeft.score);
@@ -238,7 +230,7 @@ class Pong {
     // drawScore( (3 * pongCanvas.width) / 4, pongCanvas.height / 6, this.userRight.score);
     this.drawUser(this.userLeft.x, this.userLeft.y, this.userLeft.width, this.userLeft.height, this.userLeft.color);
     this.drawUser(this.userRight.x, this.userRight.y, this.userRight.width, this.userRight.height, this.userRight.color);
-    this.drawBall(this.ball.x + this.canvasSetup.wOffsetL, this.ball.y, this.ball.radius, this.ball.color);
+    this.drawBall(this.ball.x, this.ball.y, this.ball.radius, this.ball.color);
   };  
 }
 
