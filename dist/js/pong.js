@@ -1,6 +1,7 @@
-// https://codepen.io/thecodingpie/pen/NWxzBxJ
+"use strict";
 
-class Pong {
+// https://codepen.io/thecodingpie/pen/NWxzBxJ
+export default class Pong {
   constructor(ctx, canvas) {
     this.ctx = ctx;
     this.pongCanvas = canvas;
@@ -14,20 +15,22 @@ class Pong {
 
     this.paddleSetup = {
       width: 2,
-      height: 3,
-      padding: 1
+      height: 2,
+      padding: 10
     };
 
     this.userLeft = this.createUser(
       this.paddleSetup.padding + this.canvasSetup.wOffsetL, // x position
       '#FFF', // color
+      1,      // user speed
       0.03,   // difficulty
-      true   // is AI
+      false   // is AI
     );
 
     this.userRight = this.createUser(
       (this.pongCanvas.width - (this.paddleSetup.width + this.paddleSetup.padding)) - this.canvasSetup.wOffsetL, // x position
       '#FFF', // color
+      1,      // user speed
       0.03,   // difficulty
       false    // is AI
     );
@@ -61,7 +64,7 @@ class Pong {
     };
   }
 
-  createUser(posX, color, difficulty, isAI){
+  createUser(posX, color, userSpeed, difficulty, isAI){
     return {
         x: posX,
         // initial set in the middle
@@ -75,7 +78,8 @@ class Pong {
         socketName: 'name-placeholder',
         upPressed: false,
         downPressed: false,
-        isAI: isAI
+        isAI: isAI,
+        userSpeed: userSpeed
     }
   }
 
@@ -152,20 +156,6 @@ class Pong {
 
   update() {
 
-    // move user 1 paddle
-    if (this.userLeft.isAI === false && this.userLeft.upPressed && this.userLeft.y > 0) {
-      this.userLeft.y -= 1;
-    } else if (this.userLeft.isAI === false && this.userLeft.downPressed && (this.userLeft.y < this.pongCanvas.height - this.userLeft.height)) {
-      this.userLeft.y += 1;
-    }
-    // move user 2 paddle
-    if (this.userRight.isAI === false && this.userRight.upPressed && this.userRight.y > 0) {
-      this.userLeft.y -= 1;
-    } else if (this.userRight.isAI === false && this.userRight.downPressed && (this.userRight.y < this.pongCanvas.height - this.userRight.height)) {
-      this.userRight.y += 1;
-    }
-    // check if ball hits top or bottom wall 
-    // move the ball
     this.ball.x += this.ball.velocityX;
     this.ball.y += this.ball.velocityY;
   
@@ -232,6 +222,30 @@ class Pong {
     this.drawUser(this.userRight.x, this.userRight.y, this.userRight.width, this.userRight.height, this.userRight.color);
     this.drawBall(this.ball.x, this.ball.y, this.ball.radius, this.ball.color);
   };  
+
+  controlUser(user, moveY) {
+    
+    if(user === 'userLeft' && this.userLeft.isAI === false) {
+      
+      if(moveY === 'up' && this.userLeft.y > 0) {
+        this.userLeft.y -= this.userLeft.userSpeed;
+      }
+      if(moveY === 'down' && (this.userLeft.y < this.pongCanvas.height - this.userLeft.height)) {
+        this.userLeft.y += this.userLeft.userSpeed;
+      }
+    }
+    if(user === 'userRight' && this.userRight.isAI === false) {
+      if(moveY === 'up' && this.userRight.y > 0) {
+        this.userRight.y -= this.userRight.userSpeed;
+      }
+      if(moveY === 'down' && (this.userRight.y < this.pongCanvas.height - this.userRight.height)) {
+        this.userRight.y += this.userRight.userSpeed;
+      }
+    }
+  }
 }
+
+
+
 
 
