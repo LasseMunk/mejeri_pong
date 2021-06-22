@@ -1,10 +1,12 @@
 "use strict";
-
 const express = require('express'); 			// import express
 const app = express();						
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 // const osc = require("osc");
+const draw = require("./app/js/nodeCanvas");
+
+console.log(draw.canvas);
 
 
 http.listen(3000, function(){				// begins a server which listens on port 3000
@@ -62,9 +64,6 @@ function socketStayAlive(who) {
 
 io.on('connection', function(client){
     clientConnect(client); // call function when client is connecting
-
-   
-
     client.on('disconnect', function(){
         clientDisconnect(client); // call function when client is disconnecting
         });
@@ -88,7 +87,6 @@ io.on('connection', function(client){
             if(userHashes.user_2 != 'hash_placeholder') { 
                 console.log('user_2 hash: ' + userHashes.user_2);
             }
-       
         });
 
     client.on('whatsupserver', function(data) {
@@ -98,14 +96,11 @@ io.on('connection', function(client){
 
 function clientConnect(socket) {
 
-	// there exist a socket, when a new connection is made. Therefore the argument
+	// socket exist when a new connection is made. Therefore the argument
 	// is the socket.
 
 	// There has to be code in the client which tells the client to connect
 	// to the server (and triggers the new connection event). 
-			
-			// Add a reference to the socket.io library in the index.html
-			// Write the socket.io code in the UI (or what-ever js). 
 
     clientIds.push(socket.id);
     console.log ("active connections: " + clientIds.length);
