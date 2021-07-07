@@ -245,7 +245,3 @@ export default class Pong {
   }
 }
 
-
-
-
-

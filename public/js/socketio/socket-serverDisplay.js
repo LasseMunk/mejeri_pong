@@ -1,19 +1,15 @@
 "use strict";
-
-// export default class socket {
-//   constructor() {
-
-//   }
-// }
+const displayCanvas = new DisplayCanvas('serverDisplayCanvas', 120, 80);
 
 const socket = io();	
 		// socket.on('message', oscMessage);
 		socket.on('yourHash', setMyHash);
+		socket.on('updateCanvas', updateCanvas);
 
 // Objects	
 const myInfo = {
 	hash: 'hash_placeholder',
-	user: 'user_placeholder'
+	user: 'serverDisplay'
 }
 
 // function oscMessage(data) {	 
@@ -22,9 +18,12 @@ const myInfo = {
 // 	}
 // }
 
+function updateCanvas(data) {
+	displayCanvas.setCanvasContent();
+};
+
 function setMyHash(data) {
 	myInfo.hash = data;
-  myInfo.user = data;
 	if(myInfo.user != 'user_placeholder') {
 		sendMyInfoToServer();
 	}

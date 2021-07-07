@@ -1,6 +1,3 @@
-"use strict";
-
-import Pong from "./pong.js";
 
 const skorstenCanvas = document.getElementById('skorsten-canvas');
 skorstenCanvas.width = 180;
