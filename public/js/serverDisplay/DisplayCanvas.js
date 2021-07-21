@@ -14,21 +14,16 @@ class DisplayCanvas {
     this.canvas.height = height;
   }
 
-  setCanvasContent = () => {
-    console.log('canvas content');
+  setCanvasContent = (pixelArr) => {
+    // this.ctx.fillStyle ='#000000';
+    // this.ctx.fillRect(0, 0, this.width, this.height);
+
+    for(let i = 0; i < pixelArr.length; i++) {
+    this.ctx.fillStyle = 'rgba(' + pixelArr[i].r + ',' + pixelArr[i].g + ',' + pixelArr[i].b + ',' + 255 + ')';
+    this.ctx.fillRect(pixelArr[i].x, pixelArr[i].y, 1, 1);
+    }
   }
-
 }
-
-
-
-
-  
-
-
-
-
-
 
 // let img = new Image();
 // img.onload = function(){

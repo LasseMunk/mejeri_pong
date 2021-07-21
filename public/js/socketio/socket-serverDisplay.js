@@ -1,5 +1,5 @@
 "use strict";
-const displayCanvas = new DisplayCanvas('serverDisplayCanvas', 120, 80);
+const displayCanvas = new DisplayCanvas('serverDisplayCanvas', 180, 8);
 
 const socket = io();	
 		// socket.on('message', oscMessage);
@@ -18,8 +18,9 @@ const myInfo = {
 // 	}
 // }
 
-function updateCanvas(data) {
-	displayCanvas.setCanvasContent();
+function updateCanvas(pixelArr) {
+	
+	displayCanvas.setCanvasContent(pixelArr);
 };
 
 function setMyHash(data) {
@@ -42,13 +43,4 @@ function iAm(who) {
 	sendMyInfoToServer();
 }		
 
-function returnPing() {
-
-	let pingToServer = {
-        args: myInfo.user
-    };
-
-	socket.emit('whatsupserver', pingToServer); // return ping to server
-	console.log('send ping to server');
-}
 

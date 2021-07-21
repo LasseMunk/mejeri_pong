@@ -5,8 +5,9 @@ const http = require('http').Server(app);
 const port = 3000;
 const io = require('socket.io')(http);
 
+const NodeCanvasClass = require('./app/js/nodeCanvas');
+const canvas = new NodeCanvasClass.NodeCanvas(180, 8);
 // const osc = require("osc");
-const canvas = require("./app/js/nodeCanvas");
 
 http.listen(port, err => { // begins a server which listens on port
     if(err) {
@@ -16,7 +17,6 @@ http.listen(port, err => { // begins a server which listens on port
 });
 
 app.use(express.static('public')); 	// serve the static files found in the 'dist' folder
-
 
 const clientIds = []; // array which takes care of connected IDs
 
@@ -33,51 +33,13 @@ const userSetIntervalID = {
 }
 let lastDisconnected = 'user_placeholder';
 
-function socketStayAlive(who) {
-    // start setInterval pinging tablets to avoid websockets closes
-    // see https://stackoverflow.com/questions/40228577/does-socket-io-handle-keepalives-automatically
-
-    let pingMsg = {
-        args: ["ping"] 
-    };
-
-    if(who == 'user_1') {
-        userSetIntervalID.user_1 = setInterval(function() {
-            console.log("ping to user_1");
-            if(userHashes.user_1 != "hash_placeholder" ) { 
-                for(let i = 0; i < clientIds.length; i++) { 
-                    if(clientIds[i] == userHashes.user_1) { 
-                        io.sockets.connected[userHashes.user_1].emit('message', pingMsg);   
-                    }
-                }
-            }
-        }, 10000);
-    }
-    if(who == 'user_2') {
-        userSetIntervalID.user_2 = setInterval(function() {
-            console.log("ping to user_2");
-            if(userHashes.user_2 != "hash_placeholder" ) {    // test if hash is in connected ids
-                for(var i = 0; i < clientIds.length; i++) {
-                    if(clientIds[i] == userHashes.user_2) {
-                        io.sockets.connected[userHashes.user_2].emit('message', pingMsg); 
-                    }
-                }
-            }
-        }, 10000);
-    }
-}
+const timer = setInterval(displayCanvas, 16);
+let counter = 0;
 
 function displayCanvas() {
-    let updateCanvas = {
-        args: ["updateCanvas"] 
-    };
-
-    userSetIntervalID.serverDisplay = setInterval(function() {
-        if(userHashes.serverDisplay != "hash_placeholder" ) { 
-            io.to(userHashes.serverDisplay).emit('updateCanvas', updateCanvas);  
-                    
-        }
-    }, 1000);   
+    counter = (counter + 1) % canvas.width;
+    canvas.drawRedDot(counter, 1);
+    io.to(userHashes.serverDisplay).emit('updateCanvas', canvas.imageDataToPixelArr());   
 }
 
 io.on('connection', function(client){
@@ -90,18 +52,14 @@ io.on('connection', function(client){
         // receiving 'i am this user' from client
           console.log('server received: ' + data.user);
           
-          
             if(data.user === 'user_1') {
                 userHashes.user_1 = data.hash;
-                socketStayAlive('user_1');
             };
             if(data.user === 'user_2') {
                 userHashes.user_2 = data.hash;
-                socketStayAlive('user_2');
             };
             if(data.user === 'serverDisplay') {
                 userHashes.serverDisplay = data.hash;
-               
                 displayCanvas();
             };
        
@@ -166,7 +124,7 @@ function clientDisconnect (socket) {
         }
     }
 
-    var i = clientIds.indexOf(socket);
+    let i = clientIds.indexOf(socket);
     clientIds.splice(i, 1); // delete socket.id from clientIds array
     
     console.log(lastDisconnected + ' disconnected');
