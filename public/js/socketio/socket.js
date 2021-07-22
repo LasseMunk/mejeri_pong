@@ -1,7 +1,6 @@
 "use strict";
 
 const socket = io();	
-		// socket.on('message', oscMessage);
 		socket.on('yourHash', setMyHash);
 
 // Objects	
@@ -9,12 +8,6 @@ const myInfo = {
 	hash: 'hash_placeholder',
 	user: 'user_placeholder'
 }
-
-// function oscMessage(data) {	 
-// 	if (data.args[0] == 'ping'){			 
-// 		returnPing();
-// 	}
-// }
 
 function setMyHash(data) {
 	myInfo.hash = data;
