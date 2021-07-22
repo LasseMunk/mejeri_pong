@@ -1,14 +1,21 @@
 class NodeCanvas {
-  constructor (width, height) {
+  constructor (width, height, canvasColor) {
     const {createCanvas} = require('canvas');
     this.width = width;
     this.height = height;
     this.canvas = createCanvas(this.width, this.height);
     this.ctx = this.canvas.getContext('2d');
+
+    this.canvasColor = canvasColor;
   }
 
-  drawRedDot = (x, y) => {
-    this.ctx.fillStyle = '#000000';
+  clearCanvas = () => {
+    this.ctx.fillStyle = this.canvasColor;
+    this.ctx.fillRect(0, 0, this.width, this.height);
+  }
+
+  drawDot = (x, y) => {
+    this.ctx.fillStyle = this.canvasColor;
     this.ctx.fillRect(0, 0, this.width, this.height);
     
     if(x >= 0 && x < this.width && y >= 0 && y < this.height ) {

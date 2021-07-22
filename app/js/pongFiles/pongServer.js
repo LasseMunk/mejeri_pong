@@ -1,7 +1,7 @@
 "use strict";
 
 // https://codepen.io/thecodingpie/pen/NWxzBxJ
-export default class Pong {
+class Pong {
   constructor(ctx, canvas) {
     this.ctx = ctx;
     this.pongCanvas = canvas;
@@ -11,6 +11,7 @@ export default class Pong {
       width: 72,
       wOffsetL: 54, // pong playing field padding L
                     // 180 - 72 = 108. 108 / 2 = 54
+
     };
 
     this.paddleSetup = {
@@ -32,7 +33,7 @@ export default class Pong {
       '#FFF', // color
       1,      // user speed
       0.03,   // difficulty
-      false    // is AI
+      true    // is AI
     );
 
     this.net = this.createNet(
@@ -95,6 +96,10 @@ export default class Pong {
       velocityY: velY,
       color: color
     };
+  }
+
+  drawBackground() {
+
   }
 
   drawNet() {
@@ -212,7 +217,8 @@ export default class Pong {
     }
   };
 
-  render() {  
+  render() {
+
     this.drawNet();
     // user score
     // drawScore(pongCanvas.width / 4, pongCanvas.height / 6, this.userLeft.score);
@@ -245,3 +251,4 @@ export default class Pong {
   }
 }
 
+module.exports = { Pong };

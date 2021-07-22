@@ -37,16 +37,12 @@ function iAm(who) {
 	sendMyInfoToServer();
 }		
 
-function returnPing() {
-
-	let pingToServer = {
-        args: myInfo.user
-    };
-
-	socket.emit('whatsupserver', pingToServer); // return ping to server
-	console.log('send ping to server');
-}
-
 function userInput(buttonPressed) {
-	
+	let data = {
+		user: myInfo.user,
+		buttonPressed: buttonPressed
+	}
+
+	socket.emit('pongInteraction', data);
+	// modtag socket besked på server og trigger event på client
 }
