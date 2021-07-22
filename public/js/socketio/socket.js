@@ -30,12 +30,12 @@ function iAm(who) {
 	sendMyInfoToServer();
 }		
 
-function userInput(buttonPressed) {
-	let data = {
-		user: myInfo.user,
-		buttonPressed: buttonPressed
+function socketPaddleInput(paddleUpDown) {
+	if(paddleUpDown === 'paddleUp' || paddleUpDown === 'paddleDown') {
+		let data = {
+			user: myInfo.user,
+			paddleUpDown: paddleUpDown
+		}
+		socket.emit('pongInteraction', data);
 	}
-
-	socket.emit('pongInteraction', data);
-	// modtag socket besked på server og trigger event på client
 }

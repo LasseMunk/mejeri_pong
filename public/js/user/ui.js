@@ -1,19 +1,11 @@
 "use strict";
 
-document.getElementById('left-up').addEventListener('click', function(e){
-  pongGame.controlUser('userLeft', 'up');
+document.getElementById('paddleUp').addEventListener('click', function(e){
+  socketPaddleInput('paddleUp');
   e.preventDefault();
 });
-document.getElementById('left-down').addEventListener('click', function(e){
-  pongGame.controlUser('userLeft', 'down');
-  e.preventDefault();
-});
-document.getElementById('right-up').addEventListener('click', function(e){
-  pongGame.controlUser('userRight', 'up');
-  e.preventDefault();
-});
-document.getElementById('right-down').addEventListener('click', function(e){
-  pongGame.controlUser('userRight', 'down');
+document.getElementById('paddleDown').addEventListener('click', function(e){
+  socketPaddleInput('paddleDown');
   e.preventDefault();
 });
 

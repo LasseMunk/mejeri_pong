@@ -36,19 +36,13 @@ a {
 #left-down {
   grid-area: left-down;
 }
-#right-up {
-  grid-area: right-up;
-}
-#right-down {
-  grid-area: right-down;
-}
 
 .ui {
   display: grid;
   gap: 1rem;
   grid-template-areas:
-    "left-up right-up"
-    "left-down right-down";
+    "left-up"
+    "left-down";
 
   width: 100%;
   height: 25vh;

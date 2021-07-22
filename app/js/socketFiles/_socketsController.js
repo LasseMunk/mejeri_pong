@@ -22,7 +22,7 @@ module.exports = {
       });
       
       socket.on('pongInteraction', function(data) { 
-        console.log(ui, data);
+        ui.controls.pong.moveUser('userLeft', data.paddleUpDown);
       });
     });
   },

@@ -229,22 +229,22 @@ class Pong {
     this.drawBall(this.ball.x, this.ball.y, this.ball.radius, this.ball.color);
   };  
 
-  controlUser(user, moveY) {
+  moveUser(user, moveY) {
     
     if(user === 'userLeft' && this.userLeft.isAI === false) {
       
-      if(moveY === 'up' && this.userLeft.y > 0) {
+      if(moveY === 'paddleUp' && this.userLeft.y > 0) {
         this.userLeft.y -= this.userLeft.userSpeed;
       }
-      if(moveY === 'down' && (this.userLeft.y < this.pongCanvas.height - this.userLeft.height)) {
+      if(moveY === 'paddleDown' && (this.userLeft.y < this.pongCanvas.height - this.userLeft.height)) {
         this.userLeft.y += this.userLeft.userSpeed;
       }
     }
     if(user === 'userRight' && this.userRight.isAI === false) {
-      if(moveY === 'up' && this.userRight.y > 0) {
+      if(moveY === 'paddleUp' && this.userRight.y > 0) {
         this.userRight.y -= this.userRight.userSpeed;
       }
-      if(moveY === 'down' && (this.userRight.y < this.pongCanvas.height - this.userRight.height)) {
+      if(moveY === 'paddleDown' && (this.userRight.y < this.pongCanvas.height - this.userRight.height)) {
         this.userRight.y += this.userRight.userSpeed;
       }
     }
