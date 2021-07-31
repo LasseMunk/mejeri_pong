@@ -38,7 +38,7 @@ class Pong {
 
     this.net = this.createNet(
       1,      // width
-      '#00FFFF'  // color
+      '#dddddd'  // color
     );
       
     this.ball = this.createBall(
@@ -96,10 +96,6 @@ class Pong {
       velocityY: velY,
       color: color
     };
-  }
-
-  drawBackground() {
-
   }
 
   drawNet() {

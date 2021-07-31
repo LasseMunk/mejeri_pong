@@ -5,6 +5,9 @@ class NodeCanvas {
     this.height = height;
     this.canvas = createCanvas(this.width, this.height);
     this.ctx = this.canvas.getContext('2d');
+    this.ctx.antialias = 'none';
+    // this.ctx.antialias = 'default';
+    // this.ctx.antialias = 'gray';
 
     this.canvasColor = canvasColor;
   }

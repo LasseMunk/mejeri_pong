@@ -6,7 +6,7 @@ const { socketDisconnected } = require('./socketDisconnected');
 const { socketUserIs } = require('./socketUserIs');
 
 module.exports = {
-  start: function (io, ui) {
+  start: function (io, animationsController) {
     io.on('connection', function(socket){
       
       socketConnected(io, socket, socketData); // call function when socket is connecting
@@ -22,12 +22,13 @@ module.exports = {
       });
       
       socket.on('pongInteraction', function(data) { 
-        ui.controls.pong.moveUser('userLeft', data.paddleUpDown);
+        animationsController.pong.moveUser('userLeft', data.paddleUpDown);
       });
+
     });
   },
   displayCanvasOnServerHTML: 
-    function displayCanvasOnServerHTML(io, canvas) {
+    function (io, canvas) {
       io.to(socketData.userHashes.serverDisplay).emit('updateCanvas', canvas.imageDataToPixelArr());   
     }
 }
