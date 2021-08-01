@@ -14,9 +14,7 @@ let colorPicker = new iro.ColorPicker("#colorpicker", {
 // listen to a color picker's color:change event
 // color:change callbacks receive the current color
 colorPicker.on('color:change', function(color) {
-  console.log(color.rgb);
+  setGlobalRGB(color.rgb);
 });
 
 // colorPicker.resize(350);
-
-// console.log(document.getElementById('colorpicker'));

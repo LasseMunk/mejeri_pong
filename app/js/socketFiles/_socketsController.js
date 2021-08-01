@@ -25,6 +25,11 @@ module.exports = {
         animationsController.pong.moveUser('userLeft', data.paddleUpDown);
       });
 
+      socket.on('setGlobalRGB', function(rgbObj) {
+        animationsParams.global.colors.r = rgbObj.r;
+        animationsParams.global.colors.g = rgbObj.g;
+        animationsParams.global.colors.b = rgbObj.b;
+      });
     });
   },
   displayCanvasOnServerHTML: 

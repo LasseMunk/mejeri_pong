@@ -39,3 +39,7 @@ function socketPaddleInput(paddleUpDown) {
 		socket.emit('pongInteraction', data);
 	}
 }
+
+function setGlobalRGB(rgbObj) {
+	socket.emit('setGlobalRGB', rgbObj);
+}
