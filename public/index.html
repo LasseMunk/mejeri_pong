@@ -13,6 +13,8 @@
   <script defer src="/js/socketio/socket.js"></script>
   <script defer src="/js/colorpicker/iro-colorpicker-min.js"></script>
   <script defer src="/js/colorpicker/colorpicker.js"></script>
+  <script defer src="/js/user/randomNames.js"></script>
+  <script defer src="/js/user/pageContentController.js"></script>
   <!-- <script defer type="module" src="/js/main.js"></script> -->
   <script defer src="/js/user/eventListeners.js"></script>
 
@@ -25,6 +27,13 @@
       <a href="" id="navbar-animations" class="navbar-btn">animations</a>
     </navbar>
 
+    <div id="welcomeScreen">
+      <form id="inputPongInfo" class="inputForm">
+        <input type="text" id="writeName" class="inputText" placeholder="write name" >
+        <button id="playPong-btn" class="inputSubmit">play pong!</button>
+      </form>
+    </div>
+
     <div id="pong">
       <div id="pong-playerInfo">
         <h2 id="pong-playerName">Player: The Magician</h2>
@@ -35,11 +44,16 @@
         <a href="" id="paddleUp" class="btn">UP</a>
         <a href="" id="paddleDown" class="btn">DOWN</a>
       </div>
-
     </div>
     
     <div id="animations">
-      <h2>animations</h2>
+      <div id="animations-lineVertical" class="animations-btn">
+        <a href="" id="animations-lineVertical" class="animations-btn-text">LINE VERTICAL</a>
+      </div>
+      <div id="animations-noiseSimplex" class="animations-btn">
+        <a href="" id="animations-noiseSimplex"class="animations-btn-text" >NOISE SIMPLEX</a>
+      </div>
+     
     </div>
 
     <div id="pickerContainer">

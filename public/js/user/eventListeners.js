@@ -1,6 +1,4 @@
 "use strict";
-
-
 document.getElementById('paddleUp').addEventListener('click', function(e){
   socketPaddleInput('paddleUp');
   e.preventDefault();
@@ -12,13 +10,42 @@ document.getElementById('paddleDown').addEventListener('click', function(e){
 
 document.getElementById('navbar-pong').addEventListener('click', function(e){
   changeNavbarClassList(e);
+  showPageContent('welcome');
+  
   e.preventDefault();
 });
 
 document.getElementById('navbar-animations').addEventListener('click', function(e){
   changeNavbarClassList(e);
+  showPageContent('animations');
   e.preventDefault();
 });
+
+document.getElementById('playPong-btn').addEventListener('click', function(e){
+  inputName();
+  showPageContent('pong');
+  e.preventDefault();
+});
+
+function inputName() {
+  let inputText = document.getElementById('writeName');
+  let playerName = document.getElementById('pong-playerName');
+
+  if(inputText.value === '') {
+     playerName.innerHTML = `Player: ${getRandomName()}`;
+  } else {
+    playerName.innerHTML = `Player: ${inputText.value}`;
+  }
+}
+
+function getRandomName() {
+  return randomNames[Math.round(Math.random() * randomNames.length)];
+}
+
+function emitLoadToServer(loadThis) {
+
+
+}
 
 function changeNavbarClassList(e) {
 
@@ -29,16 +56,8 @@ function changeNavbarClassList(e) {
     pongBtn.classList = "navbar-btn navbar-btn-selected";
     animationsBtn.classList = "navbar-btn";
 
-    document.getElementById('pong').style.display = 'flex';
-    document.getElementById('animations').style.display = 'none';
-
   } else {
     pongBtn.classList = "navbar-btn";
     animationsBtn.classList = "navbar-btn navbar-btn-selected";
-
-    document.getElementById('pong').style.display = 'none';
-    document.getElementById('animations').style.display = 'block';
-
   }  
 }
-

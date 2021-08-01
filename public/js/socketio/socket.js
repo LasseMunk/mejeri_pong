@@ -40,6 +40,6 @@ function socketPaddleInput(paddleUpDown) {
 	}
 }
 
-function setGlobalRGB(rgbObj) {
-	socket.emit('setGlobalRGB', rgbObj);
+function emitMyRGB(rgbObj) {
+	socket.emit('emitMyRGB', rgbObj);
 }

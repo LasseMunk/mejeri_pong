@@ -8,13 +8,17 @@ let colorPicker = new iro.ColorPicker("#colorpicker", {
   // Set the size of the color picker
   width: Math.round(window.innerWidth * 0.5),
   // Set the initial color to pure red
-  color: pickerColor
+  color: pickerColor,
+  layoutDirection: "horizontal",
+  wheelDirection: "clockwise",
+  handleRadius: 20,
+  borderColor: '#000000'
 });
 
 // listen to a color picker's color:change event
 // color:change callbacks receive the current color
 colorPicker.on('color:change', function(color) {
-  setGlobalRGB(color.rgb);
+  emitMyRGB(color.rgb);
 });
 
 // colorPicker.resize(350);
