@@ -6,7 +6,7 @@ const { socketDisconnected } = require('./socketDisconnected');
 const { socketUserIs } = require('./socketUserIs');
 
 module.exports = {
-  start: function (io, animationsController) {
+  start: function (io, animationsController, animationsParams) {
     io.on('connection', function(socket){
       
       socketConnected(io, socket, socketData); // call function when socket is connecting

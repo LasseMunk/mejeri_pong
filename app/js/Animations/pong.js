@@ -155,7 +155,7 @@ class Pong {
     this.ball.velocityY = -this.ball.velocityY;
   }
 
-  update() {
+  updateParams() {
 
     this.ball.x += this.ball.velocityX;
     this.ball.y += this.ball.velocityY;
@@ -213,7 +213,7 @@ class Pong {
     }
   };
 
-  render() {
+  renderToCanvas() {
 
     this.drawNet();
     // user score

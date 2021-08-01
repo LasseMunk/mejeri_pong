@@ -5,22 +5,47 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/style.css">
-  <title>Å-Pong</title>
+  <title>Å</title>
 
 
   <!-- <script src="/js/pong.js"></script> -->
   <script defer src="/js/socketio/socket.io.min.js"></script>
   <script defer src="/js/socketio/socket.js"></script>
+  <script defer src="/js/colorpicker/iro-colorpicker-min.js"></script>
+  <script defer src="/js/colorpicker/colorpicker.js"></script>
   <!-- <script defer type="module" src="/js/main.js"></script> -->
-  <script defer src="/js/user/ui.js"></script>
+  <script defer src="/js/user/eventListeners.js"></script>
 
 </head>
 <body>
   <div class="container">
-    <div class="ui">
-      <a href="" id="paddleUp" class="btn">UP</a>
-      <a href="" id="paddleDown" class="btn">DOWN</a>
+
+    <navbar id="navbar">
+      <a href="" id="navbar-pong" class="navbar-btn navbar-btn-selected">pong</a>
+      <a href="" id="navbar-animations" class="navbar-btn">animations</a>
+    </navbar>
+
+    <div id="pong">
+      <div id="pong-playerInfo">
+        <h2 id="pong-playerName">Player: The Magician</h2>
+        <h2 id="pong-playerScore">Score: 0</h2>
+      </div>
+
+      <div id="pong-controls">
+        <a href="" id="paddleUp" class="btn">UP</a>
+        <a href="" id="paddleDown" class="btn">DOWN</a>
+      </div>
+
     </div>
+    
+    <div id="animations">
+      <h2>animations</h2>
+    </div>
+
+    <div id="pickerContainer">
+      <div id="colorpicker"></div>
+    </div>
+    
   </div>
 
 </body>

@@ -6,9 +6,9 @@ let drawLoopParams = {
 
 module.exports = {
 
-  start: function(canvas, io, animationsController, socketsController, fpsToMs) {
+  start: function(canvas, io, socketsController, animationsController, animationsParams, fpsToMs) {
     drawLoopParams.drawLoopID = setInterval(function(){
-      drawLoop(canvas, io, animationsController, socketsController);
+      drawLoop(canvas, io, animationsController, animationsParams, socketsController);
     }, fpsToMs)
   },
 
@@ -23,19 +23,17 @@ module.exports = {
   }
 }
 
-function drawLoop(canvas, io, animationsController, socketsController) {
+function drawLoop(
+  canvas, 
+  io, 
+  animationsController, 
+  animationsParams, 
+  socketsController) {
+  
   canvas.clearCanvas();
-  let direction = 1;
-  let speed = 0.5;
-  let width = 1;
-  let colors = {
-    r: 255,
-    g: 100,
-    b: 0
-  }
-  // animationsController.current.update();
-  // animationsController.current.render();
-  animationsController.current.updateParams(canvas, direction, speed, width, colors);
-  animationsController.current.renderToCanvas(canvas);
+  
+  animationsController.current.updateParams(canvas, animationsParams);
+  
+  animationsController.current.renderToCanvas(canvas, animationsParams);
   socketsController.displayCanvasOnServerHTML(io, canvas)
 }

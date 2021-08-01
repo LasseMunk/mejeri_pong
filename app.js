@@ -21,6 +21,7 @@ app.use(express.static('public')); 	// serve the static files found in the 'publ
 const renderFPS = 60;
 const fpsToMs = 1000/renderFPS;
 const animationsController = require('./app/js/Animations/animationsController');
+const animationsParams = require('./app/js/Animations/animationsParams');
 const NodeCanvasClass = require('./app/js/nodeCanvas');
 const canvas = new NodeCanvasClass.NodeCanvas(180, 8, '#000000');
 const PongGameClass = require('./app/js/Animations/pong');
@@ -32,6 +33,7 @@ animationsController.current = animationsController.lineVertical;
 
 
 
-socketsController.start(io, animationsController);
-drawLoop.start(canvas, io, animationsController, socketsController, fpsToMs);
+
+socketsController.start(io, animationsController, animationsParams);
+drawLoop.start(canvas, io, socketsController, animationsController, animationsParams, fpsToMs);
     
