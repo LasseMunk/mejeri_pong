@@ -17,23 +17,12 @@ server.listen(port, err => { // begins a server which listens on port
 app.use(express.static('public')); 	// serve the static files found in the 'public' folder
 
 /*  ----- ANIMAITON SETUP ------ */
-
-const renderFPS = 60;
-const fpsToMs = 1000/renderFPS;
-const animationsController = require('./app/js/Animations/animationsController');
+const canvasController = require('./app/js/Canvas/canvasController');
 const animationsParams = require('./app/js/Animations/animationsParams');
-const NodeCanvasClass = require('./app/js/nodeCanvas');
-const canvas = new NodeCanvasClass.NodeCanvas(180, 8, '#000000');
-const PongGameClass = require('./app/js/Animations/pong');
-const drawLoop = require('./app/js/drawLoop');
 
-animationsController.pong = new PongGameClass.Pong(canvas.ctx, canvas.canvas);
-animationsController.lineVertical = require('./app/js/Animations/lineVertical');
-animationsController.current = animationsController.lineVertical;
+canvasController.start(io, socketsController, animationsParams);
+socketsController.start(io, canvasController, animationsParams);
+canvasController.setCurrentAnimation('lineVertical');
+canvasController.startDrawLoop();
 
-
-
-
-socketsController.start(io, animationsController, animationsParams);
-drawLoop.start(canvas, io, socketsController, animationsController, animationsParams, fpsToMs);
     

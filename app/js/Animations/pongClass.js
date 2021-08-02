@@ -246,11 +246,4 @@ class Pong {
   }
 }
 
-module.exports = {
-  updateParams: function (canvas, animationsParams) {
-
-  },
-  renderToCanvas: function (canvas, animationsParams) {
-    
-  }
- };
+module.exports = { Pong };

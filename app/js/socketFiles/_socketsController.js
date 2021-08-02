@@ -6,7 +6,7 @@ const { socketDisconnected } = require('./socketDisconnected');
 const { socketUserIs } = require('./socketUserIs');
 
 module.exports = {
-  start: function (io, animationsController, animationsParams) {
+  start: function (io, canvasController, animationsParams) {
     io.on('connection', function(socket){
       
       socketConnected(io, socket, socketData); // call function when socket is connecting
@@ -21,21 +21,26 @@ module.exports = {
         socketUserIs(socketData, data);      
       });
       
-      socket.on('pongInteraction', function(data) { 
-        animationsController.pong.moveUser('userLeft', data.paddleUpDown);
-      });
+      // socket.on('pongInteraction', function(data) { 
+      //   canvasController.pong.moveUser('userLeft', data.paddleUpDown);
+      // });
 
       socket.on('emitMyRGB', function(rgbObj) {
         animationsParams.global.colors.r = rgbObj.r;
         animationsParams.global.colors.g = rgbObj.g;
         animationsParams.global.colors.b = rgbObj.b;
       });
-    });
+
+      socket.on('displayThisOnCanvas', function(displayThisOnCanvas) {
+        canvasController.stopDrawLoop();
+        canvasController.setCurrentAnimation(displayThisOnCanvas);
+      })
+    }); 
   },
-  displayCanvasOnServerHTML: 
-    function (io, canvas) {
-      io.to(socketData.userHashes.serverDisplay).emit('updateCanvas', canvas.imageDataToPixelArr());   
-    }
+  
+  displayCanvasOnServerHTML: function (canvasControllerReferences, canvasController) {
+    canvasControllerReferences.io.to(socketData.userHashes.serverDisplay).emit('updateCanvas', canvasController.canvas.imageDataToPixelArr());   
+  }
 }
 
 

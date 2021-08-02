@@ -2,38 +2,36 @@
 
 let drawLoopParams = {
   drawLoopID: null,
+  fpsToMs: 1000/60
 };
 
 module.exports = {
 
-  start: function(canvas, io, socketsController, animationsController, animationsParams, fpsToMs) {
+  start: function(canvasControllerReferences, canvasController, animationsParams) {
     drawLoopParams.drawLoopID = setInterval(function(){
-      drawLoop(canvas, io, animationsController, animationsParams, socketsController);
-    }, fpsToMs)
+      drawLoop(canvasControllerReferences, canvasController, animationsParams);
+    }, drawLoopParams.fpsToMs)
   },
 
-  stop: function(canvas, io, socketsController) {
+  stop: function(canvasControllerReferences, canvasController) {
     drawLoopParams.drawLoopID = null;
     canvas.clearCanvas();
-    socketsController.displayCanvasOnServerHTML(io, canvas)
-  },
-
-  setCanvasContent: function(newCanvasContent) {
-    drawLoopParams.canvasContent = newCanvasContent;
+    displayCanvasOnServerHTML(canvasControllerReferences.io, canvasController.canvas)
   }
 }
 
 function drawLoop(
-  canvas, 
-  io, 
-  animationsController, 
-  animationsParams, 
-  socketsController) {
+  canvasControllerReferences,
+  canvasController,
+  animationsParams) {
   
-  canvas.clearCanvas();
+  canvasController.canvas.clearCanvas();
+  canvasController.current.updateParams(canvasController.canvas, animationsParams);
+  canvasController.current.renderToCanvas(canvasController.canvas, animationsParams);
   
-  animationsController.current.updateParams(canvas, animationsParams);
-  
-  animationsController.current.renderToCanvas(canvas, animationsParams);
-  socketsController.displayCanvasOnServerHTML(io, canvas)
+  canvasControllerReferences.socketsController.displayCanvasOnServerHTML(canvasControllerReferences, canvasController);
+ 
+ 
 }
+
+
