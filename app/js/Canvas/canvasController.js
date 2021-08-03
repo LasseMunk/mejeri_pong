@@ -1,7 +1,6 @@
 "use strict";
 // Controls what animation / game is displayed on the canvas
 const NodeCanvasClass = require('./nodeCanvas');
-const PongGameClass = require('../Animations/pong');
 const drawLoop = require('../drawLoop');
 const animationsParams = require('../Animations/animationsParams');
 
@@ -17,10 +16,12 @@ const canvasController = {
 }
 
 const animations = {
-  pong: new PongGameClass.Pong(canvasController),
+  pong: require('../Animations/pong'),
   lineVertical: require('../Animations/lineVertical'),
   noiseSimplex: null
 }
+
+animations.pong.init(canvasController.canvas);
 
 module.exports = { 
   setCurrentAnimation: function(displayThisOnCanvas) {
@@ -48,7 +49,7 @@ module.exports = {
   startDrawLoop: function() {
     drawLoop.start(canvasControllerReferences, canvasController, animationsParams) 
   },
-  
+
   stopDrawLoop: function() {
     drawLoop.stop(canvasControllerReferences, canvasController);
   }
