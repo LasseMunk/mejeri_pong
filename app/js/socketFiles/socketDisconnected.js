@@ -2,23 +2,23 @@
 
 exports.socketDisconnected = (io, socket, socketData) => {
     
-        if(socket.id == socketData.userHashes.user_1) {
-          socketData.lastDisconnectedSocket = 'user_1';
-          socketData.userHashes.user_1 = 'hash_placeholder';
+        if(socket.id == socketData.userHashes.left) {
+          socketData.lastDisconnectedSocket = 'left';
+          socketData.userHashes.left = 'hash_placeholder';
             
-            if(socketData.userSetIntervalIDs.user_1 != 'interval_placeholder') {
-                clearInterval(socketData.userSetIntervalIDs.user_1);
-                socketData.userSetIntervalIDs.user_1 = 'interval_placeholder';
+            if(socketData.userSetIntervalIDs.left != 'interval_placeholder') {
+                clearInterval(socketData.userSetIntervalIDs.left);
+                socketData.userSetIntervalIDs.left = 'interval_placeholder';
             }
         }
         
-        if(socket.id == socketData.userHashes.user_2) {
-          socketData.lastDisconnectedSocket = 'user_2';
-          socketData.userHashes.user_2 = 'hash_placeholder';
+        if(socket.id == socketData.userHashes.right) {
+          socketData.lastDisconnectedSocket = 'right';
+          socketData.userHashes.right = 'hash_placeholder';
     
-            if(socketData.userSetIntervalIDs.user_2 != 'interval_placeholder') {
-                clearInterval(socketData.userSetIntervalIDs.user_2);
-                socketData.userSetIntervalIDs.user_2 = 'interval_placeholder';
+            if(socketData.userSetIntervalIDs.right != 'interval_placeholder') {
+                clearInterval(socketData.userSetIntervalIDs.right);
+                socketData.userSetIntervalIDs.right = 'interval_placeholder';
             }
         }
         if(socket.id == socketData.userHashes.serverDisplay) {
@@ -36,5 +36,4 @@ exports.socketDisconnected = (io, socket, socketData) => {
         
         console.log(socketData.lastDisconnectedSocket + ' disconnected');
         console.log ("active connections: " + socketData.socketIds.length);
-    
 }

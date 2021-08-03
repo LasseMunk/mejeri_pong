@@ -2,33 +2,25 @@
 
 const socket = io();	
 		socket.on('yourHash', setMyHash);
+		socket.on('setCurrentUserNames', setCurrentUserNames);
 
-// Objects	
 const myInfo = {
-	hash: 'hash_placeholder',
-	user: 'user_placeholder'
+	hash: '',
+	userName: '',
+	userSide: '',
+	playAgainst: ''
 }
 
 function setMyHash(data) {
 	myInfo.hash = data;
-  myInfo.user = data;
-	if(myInfo.user != 'user_placeholder') {
-		sendMyInfoToServer();
-	}
 	console.log("hash set: " + myInfo.hash);
+	initLandingPage();
 }
 
-function sendMyInfoToServer() {
-	console.log("send user: " + myInfo.user + " hash: " + myInfo.hash);
-	socket.emit('userIs', myInfo);
+function socketPlayPong () {
+	console.log("side: " + myInfo.userSide + " name: " + myInfo.userName);
+	socket.emit('playPongAgainst', myInfo);
 }
-
-function iAm(who) {
-	myInfo.user = who;
-	console.log("user set: " + myInfo.user);
-
-	sendMyInfoToServer();
-}		
 
 function socketPaddleInput(paddleUpDown) {
 	if(paddleUpDown === 'paddleUp' || paddleUpDown === 'paddleDown') {
@@ -42,4 +34,15 @@ function socketPaddleInput(paddleUpDown) {
 
 function emitMyRGB(rgbObj) {
 	socket.emit('emitMyRGB', rgbObj);
+}
+
+function socketGetPongWhoIsPlaying () {
+	socket.emit('getWhoIsPlayingPong', myInfo.hash);
+}
+
+function setCurrentUserNames(userNames) {
+	document.getElementById('pongUserLeft').innerText = userNames.left;
+	document.getElementById('pongUserLeftDiv').innerText = userNames.left;
+	document.getElementById('pongUserRight').innerText = userNames.right;
+	document.getElementById('pongUserRightDiv').innerText = userNames.right;
 }

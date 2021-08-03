@@ -7,8 +7,8 @@ let fullCanvas = { // the actual canvas
 }
 
 const userNames = {
-  left: null,
-  right: null
+  left: 'ai',
+  right: 'ai'
 }
 
 let pongCanvasSetup = null;

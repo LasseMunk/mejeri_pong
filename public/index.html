@@ -16,6 +16,7 @@
   <script defer src="/js/user/randomNames.js"></script>
   <script defer src="/js/user/pageContentController.js"></script>
   <!-- <script defer type="module" src="/js/main.js"></script> -->
+  <script defer src="/js/user/main.js"></script>
   <script defer src="/js/user/eventListeners.js"></script>
 
 </head>
@@ -23,20 +24,34 @@
   <div class="container">
 
     <navbar id="navbar">
-      <a href="" id="navbar-pong" class="navbar-btn navbar-btn-selected">pong</a>
-      <a href="" id="navbar-animations" class="navbar-btn">animations</a>
+      <button id="navbar-pong" class="navbar-btn navbar-btn-selected" type="button">pong</button>
+      <button id="navbar-animations" class="navbar-btn" type="button">animations</button>
     </navbar>
 
-    <div id="welcomeScreen">
+  <div id="pongLandingPage">
+    <div id="pongWhoIsPlaying">
+      <h3 id="pongCurrentPlayersH3">current players:</h3>
+      <h2 id="pongUserLeftH2" class="pongUser"><span id="pongUserLeft" class="pongUser"> </span></h2>
+      <h3 id="pongVs">vs.</h3>
+      <h2 id="pongUserRightH2" class="pongUser"><span id="pongUserRight" class="pongUser"> </span></h2>
+    </div>
+
+    <div id="pongPlayAgainst">
+      <button id="pongUserLeftBtn" class="pongPlayAgainstBtn" type="button"><div class="pongBtnPlayAgainstText">PLAY AGAINST:</div><div id="pongUserLeftDiv" class="pongUserBtn"> </div></button>
+      <button id="pongUserRightBtn" class="pongPlayAgainstBtn" type="button"><div class="pongBtnPlayAgainstText">PLAY AGAINST:</div><div id="pongUserRightDiv" class="pongUserBtn"> </div></button>
+    </div>
+  </div>
+
+    <div id="pongInputName">
       <form id="inputPongInfo" class="inputForm">
         <input type="text" id="writeName" class="inputText" placeholder="write name" >
-        <button id="playPong-btn" class="inputSubmit">play pong!</button>
+        <button id="playPong-btn" type="button" class="inputSubmit">play pong!</button>
       </form>
     </div>
 
     <div id="pong">
       <div id="pong-playerInfo">
-        <h2 id="pong-playerName">Player: The Magician</h2>
+        <h2 id="pong-playerName">The Magician</h2>
         <h2 id="pong-playerScore">Score: 0</h2>
       </div>
 

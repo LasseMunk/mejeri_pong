@@ -46,11 +46,38 @@ module.exports = {
     canvasControllerReferences.animationsParams = animationsParams;
   },
 
+  getCanvasControllerReferences: function() {
+    return canvasControllerReferences;
+  },
+
   startDrawLoop: function() {
     drawLoop.start(canvasControllerReferences, canvasController, animationsParams) 
   },
 
   stopDrawLoop: function() {
     drawLoop.stop(canvasControllerReferences, canvasController);
+  },
+  getAnimationsRef: function(whichAnimation) {
+    let reference = null;
+
+    switch(whichAnimation) {
+      case 'pong':
+        reference = animations.pong;
+        break;
+      
+      case 'lineVertical':
+        reference = animations.lineVertical;
+        break;
+      
+      case 'noiseSimplex':
+        reference = animations.noiseSimplex;
+        break;
+      
+      default: 
+        console.log('wrong input to canvascontroller.getAnimationsRef()');
+        break;
+    }
+    
+    return reference;
   }
  };

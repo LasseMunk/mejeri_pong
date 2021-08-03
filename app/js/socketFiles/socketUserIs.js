@@ -3,15 +3,15 @@
 exports.socketUserIs = (socketData, data) => {
   console.log('server received: ' + data.user);
       
-      if(data.user === 'user_1') {
-        socketData.userHashes.user_1 = data.hash;
-        console.log('user_1 hash: ' + socketData.userHashes.user_1);
+      if(data.userSide === 'left') {
+        socketData.userHashes.left = data.hash;
+        console.log('user left hash: ' + socketData.userHashes.left);
       };
-      if(data.user === 'user_2') {
-        socketData.userHashes.user_2 = data.hash;
-        console.log('user_2 hash: ' + socketData.userHashes.user_2);
+      if(data.userSide === 'right') {
+        socketData.userHashes.right = data.hash;
+        console.log('user right hash: ' + socketData.userHashes.right);
       };
-      if(data.user === 'serverDisplay') {
+      if(data.userSide === 'serverDisplay') {
         socketData.userHashes.serverDisplay = data.hash;
         console.log('serverDisplay hash: ' + socketData.userHashes.serverDisplay);
       };
