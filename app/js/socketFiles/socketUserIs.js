@@ -1,19 +1,16 @@
 "use strict";
 
-exports.socketUserIs = (socketData, data) => {
-  console.log('server received: ' + data.user);
+exports.socketUserIs = (socketData, myInfo) => {
+  console.log(`CONNECTED user: ${myInfo.userSide} name: ${myInfo.userName} hash: ${myInfo.hash}` );
       
-      if(data.userSide === 'left') {
-        socketData.userHashes.left = data.hash;
-        console.log('user left hash: ' + socketData.userHashes.left);
+      if(myInfo.userSide === 'left') {
+        socketData.userHashes.left = myInfo.hash;
       };
-      if(data.userSide === 'right') {
-        socketData.userHashes.right = data.hash;
-        console.log('user right hash: ' + socketData.userHashes.right);
+      if(myInfo.userSide === 'right') {
+        socketData.userHashes.right = myInfo.hash;
       };
-      if(data.userSide === 'serverDisplay') {
-        socketData.userHashes.serverDisplay = data.hash;
-        console.log('serverDisplay hash: ' + socketData.userHashes.serverDisplay);
+      if(myInfo.userSide === 'serverDisplay') {
+        socketData.userHashes.serverDisplay = myInfo.hash;
       };
 }
 

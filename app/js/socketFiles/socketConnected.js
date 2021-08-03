@@ -5,9 +5,11 @@ exports.socketConnected = (io, socket, socketData) => {
 	// is the socket.
 	// There has to be code in the socket which tells the socket to connect
 	// to the server (and triggers the new connection event). 
-  
-    socketData.socketIds.push(socket.id);
-    console.log ("active connections: " + socketData.socketIds.length);
-  
-    io.to(socket.id).emit('yourHash', socket.id);  
+
+	// saves socket hash on server side
+	socketData.socketIds.push(socket.id);
+	console.log ("active connections: " + socketData.socketIds.length);
+
+	// saves hash on connected socket on client side  
+	io.to(socket.id).emit('yourHash', socket.id);
 }

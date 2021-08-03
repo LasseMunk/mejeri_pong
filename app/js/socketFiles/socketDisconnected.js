@@ -2,38 +2,38 @@
 
 exports.socketDisconnected = (io, socket, socketData) => {
     
-        if(socket.id == socketData.userHashes.left) {
+        if(socket.id === socketData.userHashes.left) {
           socketData.lastDisconnectedSocket = 'left';
-          socketData.userHashes.left = 'hash_placeholder';
+          socketData.userHashes.left = '';
             
-            if(socketData.userSetIntervalIDs.left != 'interval_placeholder') {
+            if(socketData.userSetIntervalIDs.left != '') {
                 clearInterval(socketData.userSetIntervalIDs.left);
-                socketData.userSetIntervalIDs.left = 'interval_placeholder';
+                socketData.userSetIntervalIDs.left = '';
             }
         }
         
-        if(socket.id == socketData.userHashes.right) {
+        if(socket.id === socketData.userHashes.right) {
           socketData.lastDisconnectedSocket = 'right';
-          socketData.userHashes.right = 'hash_placeholder';
+          socketData.userHashes.right = '';
     
-            if(socketData.userSetIntervalIDs.right != 'interval_placeholder') {
+            if(socketData.userSetIntervalIDs.right != '') {
                 clearInterval(socketData.userSetIntervalIDs.right);
-                socketData.userSetIntervalIDs.right = 'interval_placeholder';
+                socketData.userSetIntervalIDs.right = '';
             }
         }
         if(socket.id == socketData.userHashes.serverDisplay) {
           socketData.lastDisconnectedSocket = 'serverDisplay';
-          socketData.userHashes.serverDisplay = 'hash_placeholder';
+          socketData.userHashes.serverDisplay = '';
     
-            if(socketData.userSetIntervalIDs.serverDisplay != 'interval_placeholder') {
+            if(socketData.userSetIntervalIDs.serverDisplay != '') {
                 clearInterval(socketData.userSetIntervalIDs.serverDisplay);
-                socketData.userSetIntervalIDs.serverDisplay = 'interval_placeholder';
+                socketData.userSetIntervalIDs.serverDisplay = '';
             }
         }
     
         let i = socketData.socketIds.indexOf(socket);
         socketData.socketIds.splice(i, 1); // delete socket.id from socketIds array
         
-        console.log(socketData.lastDisconnectedSocket + ' disconnected');
+        console.log('user ' + socketData.lastDisconnectedSocket + ' disconnected');
         console.log ("active connections: " + socketData.socketIds.length);
 }

@@ -3,6 +3,7 @@
 const socket = io();	
 		socket.on('yourHash', setMyHash);
 		socket.on('setCurrentUserNames', setCurrentUserNames);
+		socket.on('kickedFromPong', kickedFromPong)
 
 const myInfo = {
 	hash: '',
@@ -19,7 +20,7 @@ function setMyHash(data) {
 
 function socketPlayPong () {
 	console.log("side: " + myInfo.userSide + " name: " + myInfo.userName);
-	socket.emit('playPongAgainst', myInfo);
+	socket.emit('playPong', myInfo);
 }
 
 function socketPaddleInput(paddleUpDown) {
@@ -45,4 +46,8 @@ function setCurrentUserNames(userNames) {
 	document.getElementById('pongUserLeftDiv').innerText = userNames.left;
 	document.getElementById('pongUserRight').innerText = userNames.right;
 	document.getElementById('pongUserRightDiv').innerText = userNames.right;
+}
+
+function kickedFromPong(myInfo) {
+	console.log('kicked from pong by' + myInfo.userName);
 }

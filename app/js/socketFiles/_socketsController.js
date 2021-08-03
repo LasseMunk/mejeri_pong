@@ -12,16 +12,51 @@ module.exports = {
 
     io.on('connection', function(socket){
       
-      socketConnected(io, socket, socketData); // call function when socket is connecting
+      socketConnected(io, socket, socketData); 
       
       socket.on('disconnect', function(){
-        socketDisconnected(io, socket, socketData); // call function when socket is disconnecting
+        // call function when socket is disconnecting
+        socketDisconnected(io, socket, socketData); 
         });
 
-      socket.on('userIs', function(data) { 
+      socket.on('playPong', function(myInfo) { 
         // receiving 'i am this user' from socket
         // data is sent from the users client website
-        socketUserIs(socketData, data);      
+        socketUserIs(socketData, myInfo);
+        
+        if(myInfo.playAgainst === 'left'){
+          
+          // transmit to current user right to disconnect
+          if(socketData.userHashes.right != '') {
+            canvasController.getCanvasControllerReferences()
+            .io.to(socketData.userHashes.right)
+            .emit('kickedFromPong', myInfo);
+          }
+
+          // update that i am right
+          socketData.userHashes.right = myInfo.hash;
+          
+          canvasController.getAnimationsRef('pong').setUserName(myInfo.userSide, myInfo.userName);
+
+        }
+        
+        if(myInfo.playAgainst === 'right'){
+           // transmit to left to disconnect
+          
+          if(socketData.userHashes.left != '') {
+            canvasController.getCanvasControllerReferences()
+            .io.to(socketData.userHashes.left)
+            .emit('kickedFromPong', myInfo);
+          }
+
+          // update that i am left
+          socketData.userHashes.left = myInfo.hash;
+          
+          canvasController.getAnimationsRef('pong').setUserName(myInfo.userSide, myInfo.userName);
+        }
+
+        // restart game
+        canvasController.getAnimationsRef('pong').restart;
       });
       
       // socket.on('pongInteraction', function(data) { 

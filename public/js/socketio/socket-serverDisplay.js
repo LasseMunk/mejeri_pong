@@ -8,7 +8,9 @@ const socket = io();
 // Objects	
 const myInfo = {
 	hash: '',
-	userSide: 'serverDisplay'
+	userName: 'serverDisplay',
+	userSide: 'serverDisplay',
+	playAgainst: 'jesus'
 }
 
 function updateCanvas(pixelArr) {
@@ -17,14 +19,11 @@ function updateCanvas(pixelArr) {
 
 function setMyHash(data) {
 	myInfo.hash = data;
-	if(myInfo.userSide != '') {
-		sendMyInfoToServer();
-	}
-	
+	sendMyInfoToServer();
 }
 
 function sendMyInfoToServer() {
-	socket.emit('userIs', myInfo);
+	socket.emit('playPong', myInfo);
 }
 
 

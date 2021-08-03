@@ -254,6 +254,11 @@ module.exports = {
   );
 
   },
+
+  restart: function () {
+    console.log('restart pong');
+  },
+  
   moveUser: function(user, moveY) {
     moveUser(user, moveY);
   },
