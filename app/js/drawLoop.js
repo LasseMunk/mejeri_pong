@@ -5,6 +5,8 @@ let drawLoopParams = {
   fpsToMs: 1000/60
 };
 
+
+
 module.exports = {
 
   start: function(canvasControllerReferences, canvasController, animationsParams) {
@@ -27,10 +29,10 @@ function drawLoop(
   
   canvasController.canvas.clearCanvas();
   canvasController.current.updateParams(canvasController.canvas, animationsParams);
+  // if statement hvis det er pong && - så update pongscore
   canvasController.current.renderToCanvas(canvasController.canvas, animationsParams);
   
   canvasControllerReferences.socketsController.displayCanvasOnServerHTML(canvasControllerReferences, canvasController);
- 
  
 }
 

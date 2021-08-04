@@ -25,4 +25,4 @@ socketsController.start(io, canvasController, animationsParams);
 canvasController.setCurrentAnimation('pong');
 canvasController.startDrawLoop();
 
-    
+console.log(canvasController.getCurrentAnimationAsString());

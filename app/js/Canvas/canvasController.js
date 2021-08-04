@@ -39,7 +39,11 @@ module.exports = {
         break;
     }
   },
-
+  getCurrentAnimationAsString: function (){
+    // get which animation is there. Used inside
+    console.log('what is the current animation as string?');
+    return canvasController.current;
+  }, 
   start: function(io, socketsController, animationsParams) {
     canvasControllerReferences.io = io;
     canvasControllerReferences.socketsController = socketsController;

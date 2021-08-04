@@ -126,7 +126,7 @@ function updateParams() {
   }
 
   // collision dectection on paddles
-    // if the ball x.pos is on user half then user else ai
+    // if the ball x.pos is on left half then left else right
   let player = (ball.x < fullCanvas.width / 2) ? userLeft : userRight;
 
   if(collisionDetect(player, ball)) {
@@ -137,10 +137,10 @@ function updateParams() {
 
     if(ball.y < (player.y + (player.height / 2))) {
       // if ball hit the top of paddle
-      angle = -1 * Math.PI / 4; // = -45 deg
+      angle = (-1 * Math.PI / 4) * (Math.random()*0.1); // = -45 deg
     } else if (ball.y > (player.y + (player.height / 2))) {
       // if ball hits the bottom of paddle
-      angle = Math.PI / 4; // = 45 deg
+      angle = Math.PI / 4 * (Math.random()*0.1); // = 45 deg
     }
 
     // Change velocity of ball according to which paddle the ball hit
@@ -294,6 +294,15 @@ module.exports = {
     }
     return userNames;
   }, 
+  
+  getScore() {
+    let pongScore = {
+      left: userLeft.score,
+      right: userRight.score
+    }
+    return pongScore;
+  },
+
   renderToCanvas: function(canvas, animationsParams) {
     renderToCanvas(canvas);
   },
