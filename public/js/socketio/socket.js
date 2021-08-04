@@ -14,12 +14,12 @@ const myInfo = {
 
 function setMyHash(data) {
 	myInfo.hash = data;
-	console.log("hash set: " + myInfo.hash);
+	// console.log("hash set: " + myInfo.hash);
 	initLandingPage();
 }
 
 function socketPlayPong () {
-	console.log("side: " + myInfo.userSide + " name: " + myInfo.userName);
+	// console.log("side: " + myInfo.userSide + " name: " + myInfo.userName);
 	socket.emit('playPong', myInfo);
 }
 
@@ -49,5 +49,6 @@ function setCurrentUserNames(userNames) {
 }
 
 function kickedFromPong(myInfo) {
-	console.log('kicked from pong by' + myInfo.userName);
+	document.getElementById('kickedFromPongUserName').innerHTML = myInfo.userName;
+	showPageContent('kickedFromPong');
 }

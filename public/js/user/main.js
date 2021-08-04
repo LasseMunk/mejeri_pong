@@ -4,3 +4,4 @@ function initLandingPage() {
   socketGetPongWhoIsPlaying();
   showPageContent('pongWhoIsPlaying');
 }
+

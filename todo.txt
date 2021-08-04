@@ -1,9 +1,6 @@
+Så hver modstander styrer sin pong
+
 lave så man kan loade en ny animation / spil
-
-setup så man ser hvem der lige nu spiller pong
-
-vælg om man vil overtage for en af dem der spiller
-hvis ja: skriv navn og kick out den man vil overtage for
 
 check at colorwheel virker i forskellige browsere
 

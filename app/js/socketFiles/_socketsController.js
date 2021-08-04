@@ -16,13 +16,13 @@ module.exports = {
       
       socket.on('disconnect', function(){
         // call function when socket is disconnecting
-        socketDisconnected(io, socket, socketData); 
+        socketDisconnected(socket, socketData); 
         });
 
       socket.on('playPong', function(myInfo) { 
         // receiving 'i am this user' from socket
         // data is sent from the users client website
-        socketUserIs(socketData, myInfo);
+        
         
         if(myInfo.playAgainst === 'left'){
           
@@ -32,10 +32,7 @@ module.exports = {
             .io.to(socketData.userHashes.right)
             .emit('kickedFromPong', myInfo);
           }
-
-          // update that i am right
-          socketData.userHashes.right = myInfo.hash;
-          
+        
           canvasController.getAnimationsRef('pong').setUserName(myInfo.userSide, myInfo.userName);
 
         }
@@ -54,6 +51,9 @@ module.exports = {
           
           canvasController.getAnimationsRef('pong').setUserName(myInfo.userSide, myInfo.userName);
         }
+        // update the new user to occupy either left or right side of
+        // pong game
+        socketUserIs(socketData, myInfo);
 
         // restart game
         canvasController.getAnimationsRef('pong').restart;

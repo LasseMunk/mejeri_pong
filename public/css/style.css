@@ -177,6 +177,34 @@ input[type="text"]:focus {
   font-size: 1.5rem;
 }
 
+#kickedFromPong {
+  padding: 0.5rem;
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#kickedFromPongText {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+#kickedFromPongUserName {
+  color: red;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+#kickedFromPongJoinAgainBtn {
+  padding: 0.5rem;
+  font-size: 2rem;
+  background: red;
+  color: #f4f4f4;
+  border: none;
+  width: 60%;
+}
+
 #animations {
   max-width: 100%;
   display: none;
