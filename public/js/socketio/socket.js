@@ -9,7 +9,6 @@ const myInfo = {
 	hash: '',
 	userName: '',
 	userSide: '',
-	playAgainst: ''
 }
 
 function setMyHash(data) {
@@ -25,11 +24,11 @@ function socketPlayPong () {
 
 function socketPaddleInput(paddleUpDown) {
 	if(paddleUpDown === 'paddleUp' || paddleUpDown === 'paddleDown') {
-		let data = {
-			user: myInfo.user,
+		let paddleMovement = {
+			userSide: myInfo.userSide,
 			paddleUpDown: paddleUpDown
 		}
-		socket.emit('pongInteraction', data);
+		socket.emit('pongPaddleMovement', paddleMovement);
 	}
 }
 

@@ -1,4 +1,6 @@
-Så hver modstander styrer sin pong
+points skal tælle op
+
+styre farverne med colorwheel
 
 lave så man kan loade en ny animation / spil
 

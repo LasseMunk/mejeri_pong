@@ -23,14 +23,12 @@ document.getElementById('navbar-animations').addEventListener('click', function(
 });
 
 document.getElementById('pongUserLeftBtn').addEventListener('click', function(e){
-  myInfo.userSide = 'right'
-  myInfo.playAgainst = 'left';
+  myInfo.userSide = 'left'
   showPageContent('pongInputName');
   e.preventDefault();
 });
 document.getElementById('pongUserRightBtn').addEventListener('click', function(e){
-  myInfo.userSide = 'left';
-  myInfo.playAgainst = 'right';
+  myInfo.userSide = 'right';
   showPageContent('pongInputName');
   e.preventDefault();
 });

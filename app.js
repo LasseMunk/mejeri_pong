@@ -22,7 +22,7 @@ const animationsParams = require('./app/js/Animations/animationsParams');
 
 canvasController.start(io, socketsController, animationsParams);
 socketsController.start(io, canvasController, animationsParams);
-canvasController.setCurrentAnimation('lineVertical');
+canvasController.setCurrentAnimation('pong');
 canvasController.startDrawLoop();
 
     

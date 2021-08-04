@@ -1,15 +1,27 @@
 "use strict";
 
-exports.socketDisconnected = (socket, socketData) => {
+module.exports = (socket, socketData, canvasController) => {
 
   switch(socket.id) {
     case socketData.userHashes.left:
       socketData.lastDisconnectedSocket = 'left';
+      canvasController.getAnimationsRef('pong').setUserName('left', 'ai');
+      // broadcast both player names to all connected clients
+      canvasController
+        .getCanvasControllerReferences()
+        .io
+        .emit('setCurrentUserNames', canvasController.getAnimationsRef('pong').getUserNames());
       socketData.userHashes.left = '';
       break;
 
     case socketData.userHashes.right:
       socketData.lastDisconnectedSocket = 'right';
+      canvasController.getAnimationsRef('pong').setUserName('right', 'ai');
+      // broadcast both player names to all connected clients
+      canvasController
+        .getCanvasControllerReferences()
+        .io
+        .emit('setCurrentUserNames', canvasController.getAnimationsRef('pong').getUserNames());
       socketData.userHashes.right = '';
       break;
     

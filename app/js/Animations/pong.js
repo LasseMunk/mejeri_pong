@@ -6,11 +6,6 @@ let fullCanvas = { // the actual canvas
   height: null
 }
 
-const userNames = {
-  left: 'ai',
-  right: 'ai'
-}
-
 let pongCanvasSetup = null;
 let paddleSetup = null;
 let userLeft = null;
@@ -40,8 +35,7 @@ function createUser(posX, color, userSpeed, difficulty, isAI){
       color: color,
       score: 0,
       difficulty: difficulty, // lower number makes it easier, closer to 1 makes it impossible
-      socketID: '#hash-placeholder',
-      socketName: 'name-placeholder',
+      name: 'ai',
       upPressed: false,
       downPressed: false,
       isAI: isAI,
@@ -133,13 +127,13 @@ function updateParams() {
 
   // collision dectection on paddles
     // if the ball x.pos is on user half then user else ai
-  player = (ball.x < fullCanvas.width / 2) ? userLeft : userRight;
+  let player = (ball.x < fullCanvas.width / 2) ? userLeft : userRight;
 
   if(collisionDetect(player, ball)) {
     // play hit sound
 
     // default angle is 0 deg in Radians
-    angle = 0;
+    let angle = 0;
 
     if(ball.y < (player.y + (player.height / 2))) {
       // if ball hit the top of paddle
@@ -182,98 +176,122 @@ function renderToCanvas(canvas) {
   drawBall(canvas, ball.x, ball.y, ball.radius, ball.color);
 };  
 
-function moveUser(user, moveY) {
+function moveUser(paddleMovement) {
+  let userSide = paddleMovement.userSide;
+  let paddleUpDown = paddleMovement.paddleUpDown;
+
+  console.log(userLeft.isAI);
+  console.log(userRight.isAI);
   
-  if(user === 'userLeft' && userLeft.isAI === false) {
+  if(userSide === 'left' && userLeft.isAI === false) {
     
-    if(moveY === 'paddleUp' && userLeft.y > 0) {
+    if(paddleUpDown === 'paddleUp' && userLeft.y > 0) {
       userLeft.y -= userLeft.userSpeed;
     }
-    if(moveY === 'paddleDown' && (userLeft.y < fullCanvas.height - userLeft.height)) {
+    if(paddleUpDown === 'paddleDown' && (userLeft.y < fullCanvas.height - userLeft.height)) {
       userLeft.y += userLeft.userSpeed;
     }
   }
-  if(user === 'userRight' && userRight.isAI === false) {
-    if(moveY === 'paddleUp' && userRight.y > 0) {
+  if(userSide === 'right' && userRight.isAI === false) {
+    if(paddleUpDown === 'paddleUp' && userRight.y > 0) {
       userRight.y -= userRight.userSpeed;
     }
-    if(moveY === 'paddleDown' && (userRight.y < fullCanvas.height - userRight.height)) {
+    if(paddleUpDown === 'paddleDown' && (userRight.y < fullCanvas.height - userRight.height)) {
       userRight.y += userRight.userSpeed;
     }
   }
 }
 
+function initPong(canvas) {
+
+  fullCanvas.width = canvas.width;
+  fullCanvas.height = canvas.height;
+
+  pongCanvasSetup = { // the actual canvas for pong
+    height: 8,
+    width: 72,
+    wOffsetL: 54, // pong playing field padding L
+                  // 180 - 72 = 108. 108 / 2 = 54
+  };
+
+  paddleSetup = {
+    width: 2,
+    height: 2,
+    padding: 10
+  };
+
+  userLeft = createUser(
+    paddleSetup.padding + pongCanvasSetup.wOffsetL, // x position
+    '#FFF', // color
+    1,      // user speed
+    0.03,   // difficulty
+    true   // is AI
+  );
+
+  userRight = createUser(
+    (fullCanvas.width - (paddleSetup.width + paddleSetup.padding)) - pongCanvasSetup.wOffsetL, // x position
+    '#FFF', // color
+    1,      // user speed
+    0.03,   // difficulty
+    true    // is AI
+  );
+
+  ball = createBall(
+    1,          // radius
+    0.3,        // speed
+    0.3,        // initial_speed
+    0.2,        // increase_speed
+    0.3,        // velocityX
+    0.32,       // velocityY
+    '#ff33cc'   // color 
+);
+
+net = createNet(
+  1,      // width
+  '#dddddd'  // color
+);
+}
+
 module.exports = {
   init: function(canvas) {
-
-    fullCanvas.width = canvas.width;
-    fullCanvas.height = canvas.height;
-
-    pongCanvasSetup = { // the actual canvas for pong
-      height: 8,
-      width: 72,
-      wOffsetL: 54, // pong playing field padding L
-                    // 180 - 72 = 108. 108 / 2 = 54
-    };
-
-    paddleSetup = {
-      width: 2,
-      height: 2,
-      padding: 10
-    };
-
-    userLeft = createUser(
-      paddleSetup.padding + pongCanvasSetup.wOffsetL, // x position
-      '#FFF', // color
-      1,      // user speed
-      0.03,   // difficulty
-      false   // is AI
-    );
-
-    userRight = createUser(
-      (fullCanvas.width - (paddleSetup.width + paddleSetup.padding)) - pongCanvasSetup.wOffsetL, // x position
-      '#FFF', // color
-      1,      // user speed
-      0.03,   // difficulty
-      true    // is AI
-    );
-
-    ball = createBall(
-      1,          // radius
-      0.3,        // speed
-      0.3,        // initial_speed
-      0.2,        // increase_speed
-      0.3,        // velocityX
-      0.32,       // velocityY
-      '#ff33cc'   // color 
-  );
-
-  net = createNet(
-    1,      // width
-    '#dddddd'  // color
-  );
-
+    initPong(canvas);
   },
 
   restart: function () {
     console.log('restart pong');
   },
   
-  moveUser: function(user, moveY) {
-    moveUser(user, moveY);
+  moveUser: function(userSide, paddleUpDown) {
+    moveUser(userSide, paddleUpDown);
   },
   setUserName: function(user, userName) {
+    let isAi = true;
+
     if(typeof user === 'string' && typeof userName === 'string') {
+
+      if(userName === 'ai') {
+        isAi = true;
+      } else { 
+        isAi = false;
+      }
+      
       if(user === 'left') {
-        userNames.left = userName;
+        userLeft.name = userName;
+        userLeft.isAI = isAi;
       } else {
-        userNames.right = userName;
+        userRight.name = userName;
+        userRight.isAI = isAi;
       }
     } else {
       console.log('wrong type in pong setUserName method');
     }
   },
+
   getUserNames: function(){
+    let userNames = {
+      left: userLeft.name,
+      right: userRight.name
+    }
     return userNames;
   }, 
   renderToCanvas: function(canvas, animationsParams) {

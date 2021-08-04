@@ -1,67 +1,35 @@
 "use strict";
 
 const socketData = require('./socketsData.js'); 
-const { socketConnected } = require('./socketConnected');
-const { socketDisconnected } = require('./socketDisconnected');
-const { socketUserIs } = require('./socketUserIs');
-const animationsParams = require('../Animations/animationsParams.js');
+const socketPlayPong = require('./socketPlayPong');
+const socketConnected = require('./socketConnected');
+const socketDisconnected = require('./socketDisconnected');
+// const animationsParams = require('../Animations/animationsParams.js');
 
 
 module.exports = {
   start: function (io, canvasController, animationsParams) {
-
+    
     io.on('connection', function(socket){
       
       socketConnected(io, socket, socketData); 
       
       socket.on('disconnect', function(){
         // call function when socket is disconnecting
-        socketDisconnected(socket, socketData); 
+        socketDisconnected(socket, socketData, canvasController); 
         });
 
       socket.on('playPong', function(myInfo) { 
         // receiving 'i am this user' from socket
         // data is sent from the users client website
+        socketPlayPong(canvasController, socketData, myInfo);
         
-        
-        if(myInfo.playAgainst === 'left'){
-          
-          // transmit to current user right to disconnect
-          if(socketData.userHashes.right != '') {
-            canvasController.getCanvasControllerReferences()
-            .io.to(socketData.userHashes.right)
-            .emit('kickedFromPong', myInfo);
-          }
-        
-          canvasController.getAnimationsRef('pong').setUserName(myInfo.userSide, myInfo.userName);
-
-        }
-        
-        if(myInfo.playAgainst === 'right'){
-           // transmit to left to disconnect
-          
-          if(socketData.userHashes.left != '') {
-            canvasController.getCanvasControllerReferences()
-            .io.to(socketData.userHashes.left)
-            .emit('kickedFromPong', myInfo);
-          }
-
-          // update that i am left
-          socketData.userHashes.left = myInfo.hash;
-          
-          canvasController.getAnimationsRef('pong').setUserName(myInfo.userSide, myInfo.userName);
-        }
-        // update the new user to occupy either left or right side of
-        // pong game
-        socketUserIs(socketData, myInfo);
-
-        // restart game
-        canvasController.getAnimationsRef('pong').restart;
       });
       
-      // socket.on('pongInteraction', function(data) { 
-      //   canvasController.pong.moveUser('userLeft', data.paddleUpDown);
-      // });
+      socket.on('pongPaddleMovement', function(paddleMovement) { 
+        console.log(paddleMovement);
+        canvasController.getAnimationsRef('pong').moveUser(paddleMovement);
+      });
 
       socket.on('getWhoIsPlayingPong', function(myInfoHash){
         canvasController.getCanvasControllerReferences()
